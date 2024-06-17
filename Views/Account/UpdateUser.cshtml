@@ -1,0 +1,415 @@
+﻿@model TTTN_ViettelStore.Models.ItemUsers;
+@using TTTN_ViettelStore.Models;
+
+@{
+    Layout = "/Views/Shared/LayoutHome.cshtml";
+}
+
+@functions {
+    public MyDbContext db = new MyDbContext();
+}
+
+<div class="container content-info background-center">
+    <div class="card">
+        <div class="upper">
+            <img src="https://cdn.glitch.global/aa5b89a3-979c-4256-80b3-4c98864effe5/Vstore.png?v=1716949364127" />
+        </div>
+        <div class="user txt">
+            <div class="profile">
+                <img src="~/Upload/Users/@Model.Photo" class="rounded-circle" width="80" />
+            </div>
+        </div>
+        <div class="mt-5 txt">
+            <h4 class="mb-0 fz">@Model.Name</h4>
+            <span class="text-muted">@Model.Email</span>
+            <span class="text-muted">@Model.Phone</span>
+            <button class="btn btn-primary btn-sm follow">Follow</button>
+            <div class="context-info">
+                <div class="stats">
+                    <h5 class="mb-0">Đang theo dõi</h5>
+                    <span>168</span>
+                </div>
+                <div class="stats">
+                    <h5 class="mb-0">Người theo dõi</h5>
+                    <span>2.2Tr</span>
+                </div>
+                <div class="stats">
+                    <h5 class="mb-0">Lượt yêu thích</h5>
+                    <span>1.2B</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="margin-bottom: 20px; width: 39%; margin-top: -300px;">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div id="successMessage" class="alert alert-success">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+
+        @if (ViewBag.Notify != null)
+        {
+            <div class="alert alert-danger">@ViewBag.Notify</div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div id="successMessage" class="alert alert-success">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+    </div>
+    <div style="width: 330px;">
+        <form action="/Account/UpdateUserPost" method="post" enctype="multipart/form-data" autocomplete="off">
+            <div>
+                <input type="hidden" name="id" value="@Model.Id" />
+                <div style="margin-left: 132px;">
+                    <input type="file" name="Photo" id="file" class="inputfile" data-multiple-caption="{count} files" multiple />
+                    <label for="file">
+                        <span>
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                            Ảnh đại diện
+                        </span>
+                    </label>
+                </div>
+                <!-- rows -->
+                <div class="row" style="margin-top:30px;">
+                    <div class="flex">
+                        <div class="form-floating">
+                            <label style="padding: 19px 0; font-size: 14px; color: black; font-weight: bold;">
+                                Tên tài khoản
+                            </label>
+                            <input type="text" class="form-control" name="Name" placeholder="Tên tài khoản user" required value="@Model?.Name">
+                        </div>
+                    </div>
+                </div>
+                <!-- end rows -->
+                <!-- rows -->
+                <div class="row" style="margin-top:30px;">
+                    <div class="flex">
+                        <div class="form-floating">
+                            <label style="padding: 19px 0; font-size: 14px; color: black; font-weight: bold;">
+                                Email
+                            </label>
+                            <input type="text" class="form-control" name="Email" placeholder="Email" required value="@Model?.Email">
+                        </div>
+                    </div>
+                </div>
+                <!-- end rows -->
+                <!-- rows -->
+                <div class="row" style="margin-top:30px;">
+                    <div class="flex">
+                        <div class="form-floating">
+                            <label style="padding: 19px 0; font-size: 14px; color: black; font-weight: bold;">
+                                Địa chỉ
+                            </label>
+                            <input type="text" class="form-control" name="Address" placeholder="Địa chỉ" required value="@Model?.Address">
+                        </div>
+                    </div>
+                </div>
+                <!-- end rows -->
+                <!-- rows -->
+                <div class="row" style="margin-top:30px;">
+                    <div class="flex">
+                        <div class="form-floating">
+                            <label style="padding: 19px 0; font-size: 14px; color: black; font-weight: bold;">
+                                Số điện thoại
+                            </label>
+                            <input type="text" class="form-control" name="Phone" placeholder="Số điện thoại" required value="@Model?.Phone">
+                        </div>
+                    </div>
+                </div>
+                <!-- end rows -->
+                <!-- rows -->
+                <div class="row" style="margin-top:30px;">
+                    <div class="flex">
+                        <div class="form-floating">
+                            <label style="padding: 19px 0; font-size: 14px; color: black; font-weight: bold;">
+                                Mật khẩu
+                            </label>
+                            @*<input type="text" class="form-control" name="Password" placeholder="Password" required value="@Model?.Password">*@
+                            <input type="text" class="form-control" name="Password" @(Model != null ? "placeholder='Không đổi password thì không nhập thông tin vào ô textbox này'" : "")>
+                        </div>
+                    </div>
+                </div>
+                <!-- end rows -->
+                <div style="display: flex; justify-content: space-between; margin: 30px 0 0 0;">
+                    <button class="btn-click" type="submit">
+                        <img src="https://cdn.glitch.global/aa5b89a3-979c-4256-80b3-4c98864effe5/update.png?v=1716999714702" style="width: 25px; height: 25px; position: absolute; left: 20px; top: 10px;" />
+                        <strong style="position: absolute; top: 12px; left: 50px;">Cập nhật</strong>
+                    </button>
+                    <a class="a-click" href="/Home">
+                        <img src="https://cdn.glitch.global/aa5b89a3-979c-4256-80b3-4c98864effe5/home.png?v=1716999509545" style="width: 25px; height: 25px; position: absolute; left: 20px; top: 10px;" />
+                        <strong style="margin-left: 22px;">Trang chủ</strong>
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style type="text/css">
+    .alert {
+        transition: 3s;
+        text-align: center;
+        padding: 10px;
+        width: 400px;
+        font-weight: 400;
+        margin: auto;
+        border-radius: 10px;
+        background: radial-gradient(#00BFFF, transparent);
+    }
+
+        .alert.hidden {
+            opacity: 0;
+        }
+
+    .background-center {
+        width: 100%;
+        height: 55vh;
+        background: url('https://cdn.glitch.global/aa5b89a3-979c-4256-80b3-4c98864effe5/Vstore.png?v=1716949364127') center;
+        background-size: cover;
+    }
+
+    body {
+        font-family: "Poppins", sans-serif;
+        font-weight: 300;
+    }
+
+    .content-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .card {
+        width: 380px;
+        border: none;
+        border-radius: 15px;
+        background-color: #fff;
+        position: relative;
+        height: 380px;
+        margin-top: 30px;
+    }
+
+    .upper {
+        height: 100px;
+        background: radial-gradient(#00BFFF, transparent);
+    }
+
+        .upper img {
+            width: 100%;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            height: 100px;
+            object-fit: cover;
+        }
+
+    .user {
+        position: relative;
+    }
+
+    .profile img {
+        height: 80px;
+        width: 80px;
+        margin-top: 2px;
+    }
+
+    .profile {
+        position: absolute;
+        top: -42px;
+        left: 38%;
+        height: 83px;
+        width: 84px;
+        border: 3px solid #00BFFF;
+        border-radius: 50%;
+    }
+
+    .follow {
+        border-radius: 15px;
+        padding-left: 20px;
+        padding-right: 20px;
+        height: 35px;
+    }
+
+    .stats span {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .stats h5 {
+        font-weight: 500;
+    }
+
+    .txt {
+        text-align: center;
+    }
+
+    .text-muted {
+        display: block;
+        margin: 5px 0;
+    }
+
+    .context-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 16px;
+        padding: 0 16px;
+    }
+
+    .mt-5 {
+        margin-top: 60px;
+    }
+
+    .mb-0 {
+        margin-bottom: 0;
+    }
+
+    .rounded-circle {
+        border-radius: 50%;
+    }
+
+    .fz {
+        font-size: 22px;
+    }
+      
+    .inputfile {
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+    }
+
+    label {
+        padding: 5px;
+        border-radius: 5px;
+    }
+
+    .inputfile + label {
+        width: 185px;
+        font-size: 1rem;
+        font-weight: 700;
+        text-align: center;
+        color: black;
+        background-color: white;
+        display: inline-block;
+        cursor: pointer;
+        border: 2px solid gray;
+    }
+
+        .inputfile:focus + label,
+        .inputfile + label:hover {
+            border: 2px groove red;
+            color: gray;
+        }
+
+        .inputfile + label span i {
+            padding-right: 5px;
+            color: red;
+        }
+
+    .form-floating {
+        width: 100%;
+    }
+
+        .form-floating > .form-control {
+            font-size: 16px;
+            color: white;
+            background: #00BFFF;
+            border-radius: 5px;
+            font-weight: bold;
+            height: 25px;
+            padding-left: 10px;
+            float: right;
+        }
+
+        .form-control:focus,
+        .form-control:hover {
+        border: 2px groove red;
+        color: black;
+        }
+
+    .btn-click {
+        position: relative;
+        padding: 8px;
+        font-size: 14px;
+        font-weight: bold;
+        border: 1px solid #00BFFF;
+        border-radius: 10px;
+        width: 130px;
+        cursor: pointer;
+        background: white;
+        text-align: center;
+    }
+
+        .btn-click:focus,
+        .btn-click:hover {
+            box-shadow: 2px 2px 4px gray;
+            color: gray;
+        }
+
+    .a-click {
+        position: relative;
+        text-decoration: none;
+        color: black;
+        padding: 12px;
+        font-size: 14px;
+        font-weight: bold;
+        border: 1px solid #00BFFF;
+        border-radius: 10px;
+        width: 120px;
+        cursor: pointer;
+        background: white;
+        text-align: center;
+    }
+        
+        .a-click:focus,
+        .a-click:hover {
+            box-shadow: 2px 2px 4px gray;
+            color: gray;
+        }
+</style>
+
+<script>
+    // Xử lý thông báo cập nhật
+    $(document).ready(function () {
+        setTimeout(function () {
+            $('#successMessage').addClass('hidden');
+        }, 4000);
+    });
+
+    // Xử lý click file ảnh
+    var inputs = document.querySelectorAll('.inputfile');
+    Array.prototype.forEach.call(inputs, function (input) {
+        var label = input.nextElementSibling,
+            labelVal = label.innerHTML;
+
+        input.addEventListener('change', function (e) {
+            var fileName = '';
+            var img;
+            if (this.files && this.files.length > 1) {
+                fileName = (this.getAttribute('data-multiple-caption') || '').replace('{count}', this.files.length);
+            }
+            else
+                fileName = e.target.value.split('\\').pop();
+
+            if (fileName) {
+                // Tạo một thẻ <i> mới chứa biểu tượng trước tên ảnh
+                var icon = document.createElement('i');
+                icon.classList.add('fa-regular', 'fa-image');
+
+                // Chèn thẻ <i> vào label trước nội dung tên file
+                label.querySelector('span').innerHTML = '';
+                label.querySelector('span').appendChild(icon);
+                label.querySelector('span').innerHTML += fileName;
+            }
+            else
+                label.innerHTML = labelVal;
+        });
+    });
+</script>
+

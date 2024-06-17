@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+        <title>Thông tin cá nhân</title>
+        <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Poppins:weight@100;200;300;400;500;600;700;800&display=swap");
+            body{
+                background-color:#545454;
+                font-family: "Poppins", sans-serif;
+                font-weight: 300;
+            }
+
+            .container{
+                height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .card{
+                width: 380px;
+                border: none;
+                border-radius: 15px;
+                padding: 8px;
+                background-color: #fff;
+                position: relative;
+                height: 370px;
+            }
+
+            .upper{
+                height: 100px;
+            }
+
+            .upper img{
+                width: 100%;
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
+                height: 100px;
+                object-fit: cover;
+            }
+
+            .user{
+                position: relative;
+            }
+
+            .profile img{
+                height: 80px;
+                width: 80px;
+                margin-top:2px;
+            }
+
+            .profile{
+                position: absolute;
+                top: -42px;
+                left: 38%;
+                height: 83px;
+                width: 84px;
+                border: 3px solid #00BFFF;
+                border-radius: 50%;
+            }
+
+            .follow{
+                border-radius: 15px;
+                padding-left: 20px;
+                padding-right: 20px;
+                height: 35px;
+            }
+
+            .stats span{
+                font-size: 20px;
+                font-weight: bold;
+            }
+
+            .stats h5 {
+                font-weight: 100;
+            }
+
+            .txt {
+                text-align: center;
+            }
+
+            .text-muted {
+                display: block;
+                margin: 5px 0;
+            }
+
+            .context-info {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 16px;
+                padding: 0 16px;
+            }
+
+            .mt-5 {
+                margin-top: 60px;
+            }
+            
+            .mb-0 {
+                margin-bottom: 0;
+            }
+
+            .rounded-circle {
+                border-radius: 50%;
+            }
+
+            .fz {
+                font-size: 20px;
+            }
+        </style>
+
+    </head>
+    <body>
+        <div class="container">
+            <div class="card">
+                <div class="upper">
+                    <img src="../img/logo.jpg"
+                        class="img-fluid">
+                </div>
+                <div class="user txt">
+                    <div class="profile">
+                        <img src="../img/user.jpg" class="rounded-circle" width="80">
+                    </div>
+                </div>
+
+                <div class="mt-5 txt">
+                    <h4 class="mb-0 fz">Benjamin Tims</h4>
+                    <span class="text-muted">Los Angles</span>
+                    <span class="text-muted">SDT</span>
+                    <button class="btn btn-primary btn-sm follow">Follow</button>
+                    <div class="context-info">
+                        <div class="stats">
+                            <h5 class="mb-0">Đang theo dõi</h5>
+                            <span>1668</span>
+                        </div>
+                        <div class="stats">
+                            <h5 class="mb-0">Người theo dõi</h5>
+                            <span>2.Tr</span>
+                        </div>
+                        <div class="stats">
+                            <h5 class="mb-0">Lượt yêu thích</h5>
+                            <span>1.B</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

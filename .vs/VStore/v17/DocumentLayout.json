@@ -1,0 +1,71 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Hunre\\KLTN\\Project\\VStore\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{0B09476D-1459-4F24-8004-4AE29B81FD22}|VStore.csproj|d:\\hunre\\kltn\\project\\vstore\\controllers\\productscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0B09476D-1459-4F24-8004-4AE29B81FD22}|VStore.csproj|solutionrelative:controllers\\productscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0B09476D-1459-4F24-8004-4AE29B81FD22}|VStore.csproj|d:\\hunre\\kltn\\project\\vstore\\views\\products\\searchprice.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{0B09476D-1459-4F24-8004-4AE29B81FD22}|VStore.csproj|solutionrelative:views\\products\\searchprice.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0B09476D-1459-4F24-8004-4AE29B81FD22}|VStore.csproj|d:\\hunre\\kltn\\project\\vstore\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0B09476D-1459-4F24-8004-4AE29B81FD22}|VStore.csproj|solutionrelative:controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ProductsController.cs",
+              "DocumentMoniker": "D:\\Hunre\\KLTN\\Project\\VStore\\Controllers\\ProductsController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ProductsController.cs",
+              "ToolTip": "D:\\Hunre\\KLTN\\Project\\VStore\\Controllers\\ProductsController.cs",
+              "RelativeToolTip": "Controllers\\ProductsController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAA7AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-07T03:10:41.536Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "SearchPrice.cshtml",
+              "DocumentMoniker": "D:\\Hunre\\KLTN\\Project\\VStore\\Views\\Products\\SearchPrice.cshtml",
+              "RelativeDocumentMoniker": "Views\\Products\\SearchPrice.cshtml",
+              "ToolTip": "D:\\Hunre\\KLTN\\Project\\VStore\\Views\\Products\\SearchPrice.cshtml",
+              "RelativeToolTip": "Views\\Products\\SearchPrice.cshtml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAACgAAABuAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-06-07T03:09:49.56Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AccountController.cs",
+              "DocumentMoniker": "D:\\Hunre\\KLTN\\Project\\VStore\\Controllers\\AccountController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AccountController.cs",
+              "ToolTip": "D:\\Hunre\\KLTN\\Project\\VStore\\Controllers\\AccountController.cs",
+              "RelativeToolTip": "Controllers\\AccountController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-07T03:09:36.654Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

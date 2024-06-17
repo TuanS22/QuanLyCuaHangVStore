@@ -1,0 +1,313 @@
+﻿@* doi tuong thao tac file *@
+@using System.IO
+@* nhin thay file MyDbContext *@
+@using TTTN_ViettelStore.Models
+@* de phan trang thi phai using cac doi tuong sau *@
+@using X.PagedList.Mvc.Core
+@* dùng để chuyển đổi sang tiền VND *@
+@using System.Globalization
+@model X.PagedList.IPagedList<ItemOrders>
+
+@{
+    //load file Index.cshtml vao day
+    Layout = "~/Areas/Admin/Views/Shared/Index.cshtml";
+}
+
+@functions {
+    public MyDbContext db = new MyDbContext();
+
+    public ItemUsers GetCustomers(int _CustomerId)
+    {
+        //lay mot ban ghi
+        ItemUsers record = db.Users.Where(item => item.Id == _CustomerId).FirstOrDefault();
+        return record != null ? record : new ItemUsers();
+    }
+}
+
+<section class="py-1 bg-blueGray-50">
+    <div class="w-full xl:w-10/12 mb-12 xl:mb-0 px-4 mx-auto mt-4">
+        <div class="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded h-auto">
+            <div class="rounded-t mb-0 px-4 py-3 border-0">
+                <div class="flex flex-wrap items-center">
+                    <div class="relative flex w-full px-4 max-w-full flex-grow flex-1">
+                        <div>
+                            <h1 class="font-bold text-3xl text-black">
+                                Danh sách đơn hàng đang xử lý
+                            </h1>
+                        </div>
+                    </div>
+                    <div>
+                        @*Thông báo thành công*@
+                        @if (TempData["SuccessMessage"] != null)
+                        {
+                            <div style="width: 300px; text-align: center; border-radius: 5px; border: 1px solid yellow;" id="successMessage" class="alert-success">
+                                @TempData["SuccessMessage"]
+                            </div>
+                            <script>
+                                document.addEventListener("DOMContentLoaded", function () {
+                                    setTimeout(function () {
+                                        var successMessage = document.getElementById("successMessage");
+                                        if (successMessage) {
+                                            successMessage.style.transition = "opacity 1s";
+                                            successMessage.style.opacity = "0";
+                                            setTimeout(function () {
+                                                successMessage.style.display = "none";
+                                            }, 2000);
+                                        }
+                                    }, 3000);
+                                });
+                            </script>
+                        }
+
+                        @*Thông báo lỗi *@
+                        @if (TempData["ErrorMessage"] != null)
+                        {
+                            <div style="width: 300px; text-align: center; border-radius: 5px; border: 1px solid red;" id="errorMessage" class="alert-danger">
+                                @TempData["ErrorMessage"]
+                            </div>
+
+                            <script>
+                                document.addEventListener("DOMContentLoaded", function () {
+                                    console.log("Script executed!");
+                                    setTimeout(function () {
+                                        var errorMessage = document.getElementById("errorMessage");
+                                        if (errorMessage) {
+                                            errorMessage.style.transition = "opacity 1s";
+                                            errorMessage.style.opacity = "0";
+                                            setTimeout(function () {
+                                                errorMessage.style.display = "none";
+                                            }, 2000);
+                                        }
+                                    }, 3000);
+                                });
+                            </script>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="block w-full overflow-x-auto scrollbar_hidden">
+                <table class="items-center bg-transparent w-full border-collapse">
+                    <thead class="on_top">
+                        <tr class="bg-gray-200">
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Address
+                            </th>
+                            <th>
+                                Phone
+                            </th>
+                            <th>
+                                CreateTime
+                            </th>
+                            <th>
+                                Price
+                            </th>
+                            <th>
+                                Status
+                            </th>
+                            <th>
+                                Chi tiết
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            ItemUsers recordUser = GetCustomers(item.CustomerId);
+
+                            <tr class="tr-hover">
+                                <td>
+                                    <div>
+                                        <div class="name-user">
+                                            @recordUser.Name
+                                        </div>
+                                        <div>
+                                            @recordUser.Email
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    @recordUser.Address
+                                </td>
+                                <td>
+                                    @recordUser.Phone
+                                </td>
+                                <td>
+                                    @item.CreateTime.ToString("dd/MM/yyyy")
+                                </td>
+                                <td class="price">
+                                    @{
+                                        decimal discountedPrice = Convert.ToInt32(item.Price);
+                                        string formatedDiscountedPrice = discountedPrice.ToString("C0", CultureInfo.GetCultureInfo("vi-VN"));
+                                    }
+                                    @formatedDiscountedPrice
+                                </td>
+                                <td>
+                                    @if (item.Status == 0)
+                                    {
+                                        <div class="check-status-blue"></div>
+                                        <div class="txt-blue">Chưa giao hàng</div>
+                                    }
+                                    else if (item.Status == 1)
+                                    {
+                                        <div class="check-status-green"></div>
+                                        <div class="txt-green">Đã giao hàng</div>
+                                    }
+                                    else if (item.Status == 2)
+                                    {
+                                        <div class="check-status-red"></div>
+                                        <div class="txt-red">Đã hủy đơn hàng</div>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="info-product">
+                                        <a href="/Admin/Order/Detail/@item.Id" type="button" data-modal-target="editUserModal" data-modal-show="editUserModal">
+                                            <img src="https://cdn.glitch.global/f28415ef-264f-4485-ba9d-c1c5b2db8686/info.png?v=1714021492573" />
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <style type="text/css">
+                    .block {
+                        position: relative; /* Đảm bảo position relative cho .block */
+                    }
+
+                    .on_top {
+                        position: sticky;
+                        top: -1px;
+                        background-color: white; /* Màu nền của thead */
+                        z-index: 2; /* Đảm bảo nằm trên các phần tử khác khi cuộn */
+                    }
+
+                    .pagination li {
+                        border-radius: 10px;
+                        margin-right: 20px;
+                        border: 2px solid white;
+                    }
+
+                        .pagination li a,
+                        .pagination li span {
+                            padding: 5px 10px;
+                        }
+
+                    ::-webkit-scrollbar {
+                        width: 0;
+                    }
+
+                    .txt-red {
+                        color: red;
+                    }
+
+                    .txt-green {
+                        color: green;
+                    }
+
+                    .txt-blue {
+                        color: #00BFFF;
+                    }
+
+                    .w-1170 {
+                        width: 1170px;
+                        margin: auto;
+                        padding-top: 1px;
+                    }
+
+                    table {
+                        width: 100%;
+                        font-size: 14px;
+                        border-collapse: collapse;
+                    }
+
+                        table thead tr th {
+                            text-transform: uppercase;
+                            background: #00BFFF;
+                            padding: 15px 0;
+                            color: white;
+                            text-align: center;
+                        }
+
+                        table tbody tr td {
+                            text-align: center;
+                            padding: 35px 0;
+                            border-bottom: 1px solid gray;
+                            color: #6B7280;
+                            position: relative;
+                            font-size: 16px;
+                        }
+
+                    .name-cart {
+                        font-size: 20px;
+                        text-transform: uppercase;
+                        text-align: center;
+                        margin: 25px 0;
+                    }
+
+                        .name-cart h2 {
+                            font-weight: bold;
+                        }
+
+                    .tr-hover:hover {
+                        background: rgb(232, 241, 250);
+                    }
+
+                    .name-user {
+                        color: black;
+                        font-weight: bold;
+                        font-size: 18px;
+                    }
+
+                    .check-status-red {
+                        position: absolute;
+                        left: 10%;
+                        top: 44%;
+                        width: 10px;
+                        height: 10px;
+                        border-radius: 100%;
+                        background-color: red;
+                    }
+
+                    .check-status-green {
+                        position: absolute;
+                        left: 10%;
+                        top: 44%;
+                        width: 10px;
+                        height: 10px;
+                        border-radius: 100%;
+                        background-color: green;
+                    }
+
+                    .check-status-blue {
+                        position: absolute;
+                        left: 10%;
+                        top: 44%;
+                        width: 10px;
+                        height: 10px;
+                        border-radius: 100%;
+                        background-color: #00BFFF;
+                    }
+
+                    .price {
+                        color: red;
+                        font-weight: bold;
+                        font-size: 16px;
+                    }
+
+                    .info-product a img {
+                        width: 25px;
+                        height: 25px;
+                    }
+                </style>
+
+            </div>
+        </div>
+        @*Phân trang*@
+        @Html.PagedListPager(Model, page => Url.Action("Read", new { page = page, a = 1, b = 2 }))
+    </div>
+</section>

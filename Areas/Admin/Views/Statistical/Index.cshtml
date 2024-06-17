@@ -1,0 +1,422 @@
+﻿@using TTTN_ViettelStore.Models;
+@using System.Globalization @*thư viện sử dụng để format sang tiền đ*@
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/Index.cshtml";
+}
+
+@functions {
+    MyDbContext db = new MyDbContext();
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Biểu đồ thống kê danh thu</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div style="width: 95%; margin: auto;">
+        <div style="display: flex; justify-content: space-between; margin: 30px 0;">
+            <div style="width: 62%;">
+                <div>
+                    <p style="font-size: 30px; font-family: system-ui; margin-bottom: 20px; font-weight: 500;">Biểu đồ thống kê doanh thu và lợi nhuận theo ngày</p>
+                </div>
+                <canvas id="danhthu"></canvas>
+            </div>
+            <div style="width: 35%; margin-top: 36px;">
+                <div>
+                    <p style="font-size: 16px; font-family: system-ui; margin-bottom: 15px; font-weight: 500;">Bảng thống kê doanh thu và lợi nhuận theo ngày</p>
+                </div>
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Ngày mua (2024)</th>
+                            <th>Doanh thu</th>
+                            <th>Lợi nhuận</th>
+                        </tr>
+                    </thead>
+                    <tbody id="load_data">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div style="margin: 45px 0;">
+            <div>
+                <div>
+                    <p style="font-size: 30px; font-family: system-ui; margin-bottom: 20px; font-weight: 500;">Biểu đồ thống kê sản phẩm đã bán</p>
+                </div>
+                <canvas id="sanpham" ></canvas>
+            </div>
+            <div style="margin-top: 36px;">
+                <div>
+                    <p style="font-size: 16px; font-family: system-ui; margin-bottom: 15px; font-weight: 500;">Bảng thống kê thông tin sản phẩm đã bán</p>
+                </div>
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên sản phẩm</th>
+                            <th>Số lượng (chiếc)</th>
+                            <th>Tổng tiền</th>
+                            <th>Ngày mua (2024)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="load_data_product">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div style="margin: 45px 0;">
+            <div>
+                <div>
+                    <p style="font-size: 30px; font-family: system-ui; margin-bottom: 20px; font-weight: 500;">Biểu đồ thống kê khách hàng đã mua bao nhiêu tiền</p>
+                </div>
+                <canvas id="user"></canvas>
+            </div>
+            <div style="margin-top: 36px;">
+                <div>
+                    <p style="font-size: 16px; font-family: system-ui; margin-bottom: 15px; font-weight: 500;">Bảng thống kê khách hàng đã mua bao nhiêu tiền</p>
+                </div>
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên khách hàng</th>
+                            <th>Địa chỉ</th>
+                            <th>Ngày mua (2024)</th>
+                            <th>Số lượng (chiếc)</th>
+                            <th>Sản phẩm đã mua</th>
+                            <th>Tổng tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody id="load_data_user">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <style type="text/css">
+        body {
+            color: black;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid black;
+            text-align: left;
+            padding: 8px;
+        }
+
+        thead {
+            background-color: aqua;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #dedede;
+        }
+
+        #doanhthu {
+            height: 525px !important;
+            width: 850px !important;
+        }
+
+        #sanpham, #user {
+            height: 660px !important;
+        }
+
+    </style>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            // DÙNG AJAX XỬ LÝ DOANH THU VÀ LỢI NHUẬN
+            var arrDoanhThu = [];
+            var arrDate = [];
+            var arrLoiNhuan = [];
+            $.ajax({
+                url: '/Admin/Statistical/GetStatisticalPrice',
+                type: 'GET',
+                data: {},
+                success: function (rs) {
+                    $.each(rs.data, function (i, item) {
+                        var strDate = item.date;
+                        arrDate.push(strDate);
+                        arrDoanhThu.push(item.doanhThu);
+                        arrLoiNhuan.push(item.loiNhuan);
+                    });
+
+                    // Dữ liệu và cấu hình của biểu đồ
+                    const data = {
+                        labels: arrDate,
+                        datasets: [
+                            {
+                                label: 'Danh thu theo ngày',
+                                data: arrDoanhThu,
+                                borderColor: '#00BFFF',
+                                backgroundColor: 'white',
+                                borderWidth: 3,
+                                borderRadius: 30,
+                                borderSkipped: false,
+                            },
+                            {
+                                label: 'Lợi nhuận theo ngày',
+                                data: arrLoiNhuan,
+                                borderColor: 'blue',
+                                backgroundColor: '#00BFFF',
+                                borderWidth: 3,
+                                borderRadius: 30,
+                                borderSkipped: false,
+                            }
+                        ]
+                    };
+
+                    const config = {
+                        type: 'bar',
+                        data: data,
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Thống kê doanh thu sản phẩm theo ngày'
+                                }
+                            }
+                        },
+                    };
+
+                    // Khởi tạo biểu đồ
+                    const doanhthu = new Chart(
+                        document.getElementById('danhthu'),
+                        config
+                    );
+
+                    load_data(rs.data);
+                }
+            });
+
+            // DÙNG AJAX XỬ LÝ SẢN PHẨM ĐÃ BÁN
+            var arrDateProduct = [];
+            var arrName = [];
+            var arrQuantity = [];
+            var arrPriceAll = [];
+            $.ajax({
+                url: "/Admin/Statistical/GetStatisticalProduct",
+                type: "GET",
+                data: {},
+                success: function(rs){
+                    $.each(rs.data, function (i, item) {
+                        var strDate = item.dates;
+                        arrDateProduct.push(strDate);
+                        arrName.push(item.tensp);
+                        //arrPrice.push(item.gia);
+                        arrQuantity.push(item.soluong);
+                        arrPriceAll.push(item.tongtien);
+                    });
+
+                    // Dữ liệu và cấu hình của biểu đồ
+                    const data2 = {
+                        labels: arrName,
+                        datasets: [
+                            {
+                                label: 'Sản phẩm đã bán',
+                                data: arrPriceAll,
+                                borderColor: '#00BFFF',
+                                backgroundColor: 'white',
+                                borderWidth: 3,
+                                borderRadius: 30,
+                                borderSkipped: false,
+                            }
+                        ]
+                    };
+
+                    const config2 = {
+                        type: 'bar',
+                        data: data2,
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Sản phẩm đã được bán'
+                                }
+                            }
+                        },
+                    };
+
+                    // Khởi tạo biểu đồ
+                    const sanpham = new Chart(
+                        document.getElementById('sanpham'),
+                        config2
+                    );
+                    load_data_product(rs.data);
+                }
+
+            });
+            
+            // DÙNG AJAX XỬ LÝ TÀI KHOẢN USER ĐÃ MUA
+            var arrUserName = [];
+            var arrPriceAllUser = [];
+            $.ajax({
+                url: '/Admin/Statistical/GetStatisticalUser',
+                type: 'GET',
+                data: {},
+                success: function (rs) {
+                    $.each(rs.data, function (i, item) {
+                        arrUserName.push(item.tenkh);
+                        arrPriceAllUser.push(item.tongtien);
+                    });
+
+                    const data3 = {
+                        labels: arrUserName,
+                        datasets: [
+                            {
+                                label: 'Khách hàng',
+                                data: arrPriceAllUser,
+                                borderColor: '#00BFFF',
+                                backgroundColor: 'white',
+                                borderWidth: 3,
+                                borderRadius: 30,
+                                borderSkipped: false,
+                            }
+                        ]
+                    };
+
+                    const config3 = {
+                        type: 'bar',
+                        data: data3,
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Tài khoản đã mua hàng'
+                                }
+                            }
+                        },
+                    };
+
+                    // Khởi tạo biểu đồ
+                    const user = new Chart(
+                        document.getElementById('user'),
+                        config3
+                    );
+
+                    load_data_user(rs.data);
+                }
+            });
+        });
+
+        function load_data(data) {
+            var strHtml = "";
+            var doanhThu = 0;
+            var loiNhuan = 0;
+
+            $.each(data, function (i, item) {
+                var strDate = item.date;
+                var discountedPrice = parseInt(item.doanhThu, 10);
+                var formattedDiscountedPrice = discountedPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+                var discountedProfit = parseInt(item.loiNhuan, 10);
+                var formattedDiscountedProfit = discountedProfit.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+
+                doanhThu += discountedPrice;
+                loiNhuan += discountedProfit;
+
+                strHtml += "<tr>";
+                strHtml += "<td>" + (i + 1) + "</td>";
+                strHtml += "<td>" + strDate + "</td>";
+                strHtml += "<td>" + (formattedDiscountedPrice || 'N/A') + "</td>";
+                strHtml += "<td>" + (formattedDiscountedProfit || 'N/A') + "</td>";
+                strHtml += "</tr>";
+            });
+
+            var formattedDoanhThu = doanhThu.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+            var formattedLoiNhuan = loiNhuan.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+
+            strHtml += "<tr style='background: white;'>";
+            strHtml += "<td colspan='2' style='font-weight: bold;'>" + "Tổng" + "</td>";
+            strHtml += "<td style='color: red; font-weight: bold;'>" + (formattedDoanhThu || 'N / A') + "</td>";
+            strHtml += "<td style='color: red; font-weight: bold;'>" + (formattedLoiNhuan || 'N/A') + "</td>";
+            strHtml += "</tr>";
+
+            $('#load_data').html(strHtml);
+        }
+
+        function load_data_product(data)
+        {
+            var strHtml = "";
+            var totalQuantity = 0;
+            var totalAmount = 0;
+
+            $.each(data, function (i, item) {
+                var strDate = item.dates;
+                var discountedPriceAll = parseInt(item.tongtien, 10);
+                var formattedDiscountedPriceAll = discountedPriceAll.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+
+                totalQuantity += parseInt(item.soluong, 10);
+                totalAmount += discountedPriceAll;
+
+                strHtml += "<tr>";
+                strHtml += "<td>" + (i + 1) + "</td>";
+                strHtml += "<td>" + item.tensp + "</td>";
+                strHtml += "<td>" + item.soluong + "</td>";
+                strHtml += "<td>" + (formattedDiscountedPriceAll || 'N/A') + "</td>";
+                strHtml += "<td>" + strDate + "</td>";
+                strHtml += "</tr>";
+            });
+
+            var formattedTotalAmount = totalAmount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+
+            strHtml += "<tr style='background: white;'>";
+            strHtml += "<td colspan='2' style='font-weight: bold;'>" + 'Tổng' + "</td>";
+            strHtml += "<td style='color: red; font-weight: bold;'>" + totalQuantity + "</td>";
+            strHtml += "<td colspan='2' style='color: red; font-weight: bold;'>" + (formattedTotalAmount || 'N/A') + "</td>";
+            strHtml += "</tr>";
+
+            $('#load_data_product').html(strHtml);
+        }
+
+        function load_data_user(data) {
+            var strHtml = "";
+            $.each(data, function (i, item) {
+                var strDates = item.dates;
+                var discountedPriceAll = parseInt(item.tongtien, 10);
+                var formattedDiscountedPriceAll = discountedPriceAll.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+
+                strHtml += "<tr>";
+                strHtml += "<td rowspan='2'>" + (i + 1) + "</td>";
+                strHtml += "<td>" + item.tenkh + "</td>";
+                strHtml += "<td rowspan='2'>" + item.diachi + "</td>";
+                strHtml += "<td rowspan='2'>" + strDates + "</td>";
+                strHtml += "<td rowspan='2'>" + item.soluong + "</td>";
+                strHtml += "<td rowspan='2'>" + item.tensp + "</td>";
+                strHtml += "<td rowspan='2'>" + (formattedDiscountedPriceAll || 'N/A') + "</td>";
+                strHtml += "</tr>";
+                strHtml += "<tr>";
+                strHtml += "<td>" + item.email + "</td>";
+                strHtml += "</tr>";
+            });
+            $('#load_data_user').html(strHtml);
+        }
+    </script>
+
+</body>
+</html>
